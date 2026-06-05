@@ -38,35 +38,87 @@ async function searchTicket() {
         }
 
         resultDiv.innerHTML = `
-            <div class="card shadow-sm border-0 result-card">
-                <div class="card-header bg-success text-white">
-                    <h5 class="mb-0">Ticket Details</h5>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered align-middle">
-                            <tbody>
-                                ${row("Ticket Number", data.ticketNo)}
-                                ${row("Subject", data.subject)}
-                                ${row("Date Created", data.date)}
-                                ${row("Due By", data.dueBy)}
-                                ${row("Requester Name", data.requesterName)}
-                                ${row("Requester Email", data.requesterEmail)}
-                                <tr>
-                                    <th>Status</th>
-                                    <td>${statusBadge(data.status)}</td>
-                                </tr>
-                                ${row("Priority", data.priority)}
-                                ${row("display", data.display_id)}
-                                ${row("Assigned Technician", data.technician)}
-                                ${row("Group", data.group)}
-                                ${row("Category", data.category)}
-                                ${row("Site", data.site)}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>`;
+<div class="ticket-result">
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-header bg-white">
+            <h4 class="mb-0">📋 Request Details</h4>
+        </div>
+
+        <div class="card-body p-0">
+
+            <table class="table table-bordered mb-0">
+
+                <tr>
+                    <th width="35%">Ticket Number</th>
+                    <td>${data.displayId || data.ticketNo}</td>
+                </tr>
+
+                <tr>
+                    <th>Current Status</th>
+                    <td>
+                        <span class="badge status-badge">
+                            ${data.status}
+                        </span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Priority</th>
+                    <td>${data.priority || "-"}</td>
+                </tr>
+
+                <tr>
+                    <th>Created Date</th>
+                    <td>${data.date || "-"}</td>
+                </tr>
+
+                <tr>
+                    <th>Last Updated</th>
+                    <td>${data.date || "-"}</td>
+                </tr>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <h4>📝 Resolution Summary</h4>
+
+            <p class="mb-0">
+                ${data.subject || "No summary available"}
+            </p>
+
+        </div>
+
+    </div>
+
+    
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-body">
+
+            <h5>🎧 Need Assistance?</h5>
+
+            <p class="mb-0">
+                Contact Service Desk and quote
+                <strong>${data.displayId}</strong>
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+`;
+        
 
     } catch (err) {
         resultDiv.innerHTML = `
