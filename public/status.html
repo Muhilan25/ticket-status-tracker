@@ -73,90 +73,119 @@ body{
 </div>
 
 <script>
+document.addEventListener("DOMContentLoaded", async () => {
 
-const ticketId =
-new URLSearchParams(window.location.search)
-.get("ticket");
+    const resultDiv = document.getElementById("result");
 
-if(ticketId){
+    const params = new URLSearchParams(window.location.search);
+    let ticketParam = params.get("ticket");
 
-    fetch(`/ticket/${ticketId}`)
-    .then(res => res.json())
-    .then(data => {
+    if (!ticketParam) {
+        resultDiv.innerHTML = `
+            <div class="alert alert-danger">
+                Missing ticket in URL
+            </div>`;
+        return;
+    }
 
-        document.getElementById("result").innerHTML = `
+    let ticketNo;
 
-        <div class="card main-card">
+    // STEP 1: detect if already base64 or raw
+    const isBase64 = /^[A-Za-z0-9+/=]+$/.test(ticketParam);
 
-            <div class="card-header bg-primary text-white">
-                <h4 class="mb-0">
+    try {
+        if (isBase64 && isNaN(ticketParam)) {
+            // already encoded → decode
+            ticketNo = atob(ticketParam);
+        } else {
+            // raw → encode first, then decode flow
+            const encoded = btoa(ticketParam);
+
+            // update URL to encoded form (no reload)
+            window.history.replaceState({}, "", `status.html?ticket=${encoded}`);
+
+            ticketNo = ticketParam;
+        }
+    } catch (e) {
+        resultDiv.innerHTML = `
+            <div class="alert alert-danger">
+                Invalid ticket format
+            </div>`;
+        return;
+    }
+
+    // loading UI
+    resultDiv.innerHTML = `
+        <div class="text-center py-4">
+            <div class="spinner-border text-primary"></div>
+            <p>Loading ticket...</p>
+        </div>`;
+
+    try {
+        const res = await fetch(`/ticket/${encodeURIComponent(ticketNo)}`);
+
+        if (!res.ok) throw new Error("Not found");
+
+        const data = await res.json();
+
+        resultDiv.innerHTML = `
+            <div class="card main-card">
+
+                <div class="card-header bg-primary text-white text-center">
                     Request Details
-                </h4>
-            </div>
+                </div>
 
-            <div class="card-body">
+                <div class="card-body">
 
-                <table class="table table-bordered table-striped align-middle">
+                    <table class="table table-bordered">
 
-                    <tr>
-                        <th>Ticket Number</th>
-                        <td>${data.ticketNo}</td>
-                    </tr>
+                        <tr>
+                            <th>Ticket Number</th>
+                            <td>${data.ticketNo}</td>
+                        </tr>
 
-                    <tr>
-                        <th>Status</th>
-                        <td>
-                            <span class="status-badge">
-                                ${data.status}
-                            </span>
-                        </td>
-                    </tr>
+                        <tr>
+                            <th>Status</th>
+                            <td>${data.status}</td>
+                        </tr>
 
-                    <tr>
-                        <th>Priority</th>
-                        <td>${data.priority}</td>
-                    </tr>
+                        <tr>
+                            <th>Priority</th>
+                            <td>${data.priority}</td>
+                        </tr>
 
-                    <tr>
-                        <th>Requester Name</th>
-                        <td>${data.requesterName}</td>
-                    </tr>
+                        <tr>
+                            <th>Name</th>
+                            <td>${data.requesterName}</td>
+                        </tr>
 
-                    <tr>
-                        <th>Requester Email</th>
-                        <td>${data.requesterEmail}</td>
-                    </tr>
+                        <tr>
+                            <th>Email</th>
+                            <td>${data.requesterEmail}</td>
+                        </tr>
 
-                    <tr>
-                        <th>Created Date</th>
-                        <td>${data.createdDate}</td>
-                    </tr>
+                        <tr>
+                            <th>Created</th>
+                            <td>${data.createdDate}</td>
+                        </tr>
 
-                    <tr>
-                        <th>Subject</th>
-                        <td>${data.subject}</td>
-                    </tr>
+                    </table>
 
-                </table>
+                </div>
 
-            </div>
-
-        </div>
-
-        `;
-    })
-    .catch(err => {
-
-        document.getElementById("result").innerHTML = `
-            <div class="alert alert-danger mt-4">
-                Ticket not found.
             </div>
         `;
-    });
 
-}
+    } catch (err) {
+        resultDiv.innerHTML = `
+            <div class="alert alert-danger">
+                Ticket not found or server error
+            </div>`;
+    }
 
+});
 </script>
+
 
 </body>
 </html>

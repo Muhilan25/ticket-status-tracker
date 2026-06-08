@@ -1,16 +1,25 @@
 async function searchTicket() {
+
     const ticketNo = document.getElementById("ticketNo").value.trim();
+    const resultDiv = document.getElementById("result");
 
     if (!ticketNo) {
         alert("Please enter a Ticket Number");
         return;
     }
 
-    const resultDiv = document.getElementById("result");
-    resultDiv.innerHTML = `<div class="text-center py-4"><div class="spinner-border text-success"></div><p class="mt-2 text-muted">Fetching ticket...</p></div>`;
+    // optional encoding (only for display logic, not required)
+    const encodedId = btoa(ticketNo);
+    const decodedId = atob(encodedId);
+
+    resultDiv.innerHTML = `
+        <div class="text-center py-4">
+            <div class="spinner-border text-success"></div>
+            <p class="mt-2 text-muted">Fetching ticket...</p>
+        </div>`;
 
     try {
-        const response = await fetch(`/ticket/${ticketNo}`);
+        const response = await fetch(`/ticket/${encodeURIComponent(decodedId)}`);
         const data = await response.json();
 
         if (!response.ok) {
@@ -19,22 +28,6 @@ async function searchTicket() {
                     <strong>Error:</strong> ${data.error || "Failed to fetch ticket"}
                 </div>`;
             return;
-        }
-
-        function row(label, value) {
-            return `<tr>
-                <th width="30%">${label}</th>
-                <td>${value || '<span class="text-muted">—</span>'}</td>
-            </tr>`;
-        }
-
-        function statusBadge(status) {
-            const s = (status || '').toLowerCase();
-            let color = 'success';
-            if (s.includes('close'))  color = 'secondary';
-            if (s.includes('pending') || s.includes('hold')) color = 'warning';
-            if (s.includes('open'))   color = 'primary';
-            return `<span class="badge bg-${color} fs-6">${status || '—'}</span>`;
         }
 
         resultDiv.innerHTML = `
@@ -51,38 +44,35 @@ async function searchTicket() {
             <table class="table table-bordered mb-0">
 
                 <tr>
-    <th width="35%">Ticket Number</th>
-    <td>${data.ticketNo || "-"}</td>
-</tr>
+                    <th width="35%">Ticket Number</th>
+                    <td>${data.ticketNo || "-"}</td>
+                </tr>
 
-<tr>
-    <th>Current Status</th>
-    <td>
-        <span class="badge status-badge">
-            ${data.status || "-"}
-        </span>
-    </td>
-</tr>
+                <tr>
+                    <th>Status</th>
+                    <td><span class="badge status-badge">${data.status || "-"}</span></td>
+                </tr>
 
-<tr>
-    <th>Priority</th>
-    <td>${data.priority || "-"}</td>
-</tr>
+                <tr>
+                    <th>Priority</th>
+                    <td>${data.priority || "-"}</td>
+                </tr>
 
-<tr>
-    <th>Created Date</th>
-    <td>${data.createdDate || "-"}</td>
-</tr>
+                <tr>
+                    <th>Created Date</th>
+                    <td>${data.createdDate || "-"}</td>
+                </tr>
 
-<tr>
-    <th>Requester Name</th>
-    <td>${data.requesterName || "-"}</td>
-</tr>
+                <tr>
+                    <th>Requester Name</th>
+                    <td>${data.requesterName || "-"}</td>
+                </tr>
 
-<tr>
-    <th>Requester Email</th>
-    <td>${data.requesterEmail || "-"}</td>
-</tr>
+                <tr>
+                    <th>Requester Email</th>
+                    <td>${data.requesterEmail || "-"}</td>
+                </tr>
+
             </table>
 
         </div>
@@ -94,23 +84,17 @@ async function searchTicket() {
         <div class="card-body">
 
             <h4>📝 Resolution Summary</h4>
-
-            <p class="mb-0">
-                ${data.subject || "No summary available"}
-            </p>
+            <p class="mb-0">${data.subject || "No summary available"}</p>
 
         </div>
 
     </div>
-
-    
 
     <div class="card border-0 shadow-sm">
 
         <div class="card-body">
 
             <h5>🎧 Need Assistance?</h5>
-
             <p class="mb-0">
                 Contact Service Desk and quote
                 <strong>${data.displayId}</strong>
@@ -121,8 +105,7 @@ async function searchTicket() {
     </div>
 
 </div>
-`;
-        
+        `;
 
     } catch (err) {
         resultDiv.innerHTML = `
@@ -131,10 +114,3 @@ async function searchTicket() {
             </div>`;
     }
 }
-
-// Allow pressing Enter to search
-document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById("ticketNo").addEventListener("keydown", (e) => {
-        if (e.key === "Enter") searchTicket();
-    });
-});
