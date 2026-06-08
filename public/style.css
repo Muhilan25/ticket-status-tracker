@@ -25,7 +25,7 @@ body{
         var(--primary),
         var(--secondary)
     ); */
-    background-color: #2f20ef;
+    /* background-color: #2f20ef; */
     color:white;
     padding:20px 0;
     box-shadow:0 4px 20px rgba(0,0,0,.15);
@@ -40,6 +40,7 @@ body{
     font-weight:700;
     margin-bottom:10px;
     margin-top: 10px;
+    color: #1E293B;
 }
 
 .hero-title p{
@@ -72,6 +73,18 @@ body{
     border:2px solid rgba(255,255,255,.25);
     font-size:52px;
     color:white;
+}
+.imagebox{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.imagebox img{
+    max-width: 250px;
+    height: auto;
+    display: block;
 }
 
 /* =========================
