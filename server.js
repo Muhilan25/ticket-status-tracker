@@ -43,32 +43,6 @@ async function getAccessToken() {
     return cachedToken;
 }
 
-app.get('/ticket-test/:id', async (req, res) => {
-
-    try {
-
-        const accessToken = await getAccessToken();
-
-        const response = await axios.get(
-            `${process.env.SDESK_URL}/requests`,
-            {
-                headers: {
-                    Authorization: `Zoho-oauthtoken ${accessToken}`,
-                    Accept: 'application/vnd.manageengine.sdp.v3+json'
-                }
-            }
-        );
-
-        res.json(response.data);
-
-    } catch (err) {
-
-        res.status(500).json(
-            err.response?.data || err.message
-        );
-    }
-});
-
 
 
 /**
@@ -95,6 +69,8 @@ app.get('/test-token', async (req, res) => {
  * Fetch Ticket Details
  */
 
+
+
 app.get('/ticket/:displayId', async (req, res) => {
 
     const displayId = req.params.displayId;
@@ -103,42 +79,27 @@ app.get('/ticket/:displayId', async (req, res) => {
 
         const accessToken = await getAccessToken();
 
-        let startIndex = 1;
-        let foundTicket = null;
-        let hasMoreRows = true;
-
-        while (hasMoreRows && !foundTicket) {
-
-            const response = await axios.get(
-                `${process.env.SDESK_URL}/requests`,
-                {
-                    headers: {
-                        Authorization: `Zoho-oauthtoken ${accessToken}`,
-                        Accept: 'application/vnd.manageengine.sdp.v3+json'
-                    },
-                    params: {
-                        input_data: JSON.stringify({
-                            list_info: {
-                                row_count: 100,
-                                start_index: startIndex
+        // Search ticket directly by display ID
+        const searchResponse = await axios.get(
+            `${process.env.SDESK_URL}/requests`,
+            {
+                headers: {
+                    Authorization: `Zoho-oauthtoken ${accessToken}`,
+                    Accept: 'application/vnd.manageengine.sdp.v3+json'
+                },
+                params: {
+                    input_data: JSON.stringify({
+                        list_info: {
+                            search_fields: {
+                                display_id: displayId
                             }
-                        })
-                    }
+                        }
+                    })
                 }
-            );
+            }
+        );
 
-            const requests = response.data.requests || [];
-
-            foundTicket = requests.find(r =>
-                r.display_id === displayId ||
-                r.display_key?.display_value === displayId ||
-                r.display_key?.display_value === `SoftM-${displayId}` ||
-                r.display_key?.display_value === `In-${displayId}`
-            );
-
-            hasMoreRows = response.data.list_info?.has_more_rows;
-            startIndex += 100;
-        }
+        const foundTicket = searchResponse.data.requests?.[0];
 
         if (!foundTicket) {
             return res.status(404).json({
@@ -146,6 +107,7 @@ app.get('/ticket/:displayId', async (req, res) => {
             });
         }
 
+        // Get complete ticket details
         const detailResponse = await axios.get(
             `${process.env.SDESK_URL}/requests/${foundTicket.id}`,
             {
@@ -181,46 +143,6 @@ app.get('/ticket/:displayId', async (req, res) => {
 });
 
 
-
-app.get('/debug', async (req, res) => {
-    try {
-
-        const accessToken = await getAccessToken();
-
-        const response = await axios.get(
-            `${process.env.SDESK_URL}/requests`,
-            {
-                headers: {
-                    Authorization: `Zoho-oauthtoken ${accessToken}`,
-                    Accept: 'application/vnd.manageengine.sdp.v3+json'
-                },
-                params: {
-                    input_data: JSON.stringify({
-                        list_info: {
-                            row_count: 100
-                        }
-                    })
-                }
-            }
-        );
-
-        console.log(
-            JSON.stringify(response.data.list_info, null, 2)
-        );
-
-        res.json(response.data);
-
-    } catch (err) {
-
-        console.error(
-            err.response?.data || err.message
-        );
-
-        res.status(500).json(
-            err.response?.data || err.message
-        );
-    }
-});
 
 
 
