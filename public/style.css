@@ -1,81 +1,162 @@
+:root{
+    --primary:#002E5D;
+    --secondary:#0D5EA6;
+    --accent:#3FA9F5;
+    --bg:#F5F8FC;
+    --text:#1E293B;
+    --white:#FFFFFF;
+}
+
 body{
     font-family:'Poppins',sans-serif;
-    background:#ffffff;
+    background:var(--bg);
+    color:var(--text);
+    margin:0;
+    padding:0;
 }
 
+/* =========================
+   Hero Section
+========================= */
 
 .hero-section{
-    background:#0d3c84;
-    color:#fff;
+    /* background:linear-gradient(
+        135deg,
+        var(--primary),
+        var(--secondary)
+    ); */
+    background-color: #2f20ef;
+    color:white;
     padding:20px 0;
+    box-shadow:0 4px 20px rgba(0,0,0,.15);
 }
 
-.hero-section h1{
-    font-weight:500;
+.hero-title{
+    text-align:center;
+}
+
+.hero-title h2,
+.hero-title h2{
+    font-weight:700;
     margin-bottom:10px;
+    margin-top: 10px;
 }
 
-.hero-icon{
-    width:70px;
-    height:70px;
-    border:2px solid rgba(255,255,255,.4);
-    border-radius:50%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
+.hero-title p{
+    opacity:.95;
+    font-size:15px;
 }
 
 .hero-icon-box{
+    width:80px;
+    height:80px;
+    margin:auto;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    background:rgba(255,255,255,.15);
+    border:2px solid rgba(255,255,255,.25);
     font-size:32px;
     color:white;
 }
-
-
-.hero-section p{
-    margin:0;
-    opacity:.9;
+.form-icon-box {
+/* width:80px; */
+    /* height:100px; */
+    margin:auto;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    background:rgba(255,255,255,.15);
+    border:2px solid rgba(255,255,255,.25);
+    font-size:52px;
+    color:white;
 }
+
+/* =========================
+   Main Card
+========================= */
 
 .main-card{
     border-radius:20px;
-    margin-top:-30px;
+    margin-top:-40px;
+    overflow:hidden;
+    box-shadow:0 10px 35px rgba(0,0,0,.12);
 }
 
-.icon-box{
-    font-size:50px;
+.card-body{
+    background:white;
+}
+
+.request-head{
+    color:var(--primary);
+    font-weight:700;
+}
+
+.request-para{
+    color:#64748B;
+    font-size:15px;
+}
+
+/* =========================
+   Form
+========================= */
+
+.form-label{
+    color:var(--primary);
 }
 
 .form-control{
     border-radius:12px;
+    border:1px solid #D6DCE5;
+    padding:14px;
+    font-size:15px;
+}
+
+.form-control:focus{
+    border-color:var(--secondary);
+    box-shadow:0 0 0 4px rgba(13,94,166,.15);
 }
 
 .btn-primary{
+    /* background:var(--primary); */
+    background-color: #2f20ef;
+    border:none;
     border-radius:12px;
     padding:14px;
     font-weight:600;
+    transition:.3s;
 }
 
+.btn-primary:hover{
+    background:var(--secondary);
+}
+
+/* =========================
+   Result Card
+========================= */
+
+.ticket-result .card,
 #result .card{
-    border-radius:15px;
-}
-
-.request-head {
-    color: #122845;
-}
-.request-para {
-    color: #122845;
-    font-size: 16px;
-}
-.ticket-result .card{
+    border:none;
     border-radius:16px;
+    box-shadow:0 4px 15px rgba(0,0,0,.08);
 }
 
 .status-badge{
-    background:#d1fae5;
-    color:#166534;
-    padding:8px 15px;
-    border-radius:20px;
+    display:inline-block;
+    background:var(--secondary);
+    color:white;
+    padding:8px 16px;
+    border-radius:30px;
+    font-size:14px;
+    font-weight:600;
 }
+
+/* =========================
+   Timeline
+========================= */
 
 .timeline{
     display:flex;
@@ -93,7 +174,7 @@ body{
     width:45px;
     height:45px;
     border-radius:50%;
-    border:2px solid #cbd5e1;
+    border:2px solid #CBD5E1;
     display:flex;
     align-items:center;
     justify-content:center;
@@ -102,13 +183,13 @@ body{
 }
 
 .completed .circle{
-    background:#22c55e;
+    background:#16A34A;
     color:white;
     border:none;
 }
 
 .active .circle{
-    background:#2563eb;
+    background:var(--secondary);
     color:white;
     border:none;
 }
@@ -116,6 +197,59 @@ body{
 .line{
     flex:1;
     height:3px;
-    background:#cbd5e1;
+    background:#CBD5E1;
     margin:0 10px;
+}
+
+/* =========================
+   Help Section
+========================= */
+
+hr{
+    border-color:#E2E8F0;
+}
+
+.text-center h5{
+    color:var(--primary);
+    font-weight:600;
+}
+
+.text-center strong{
+    color:var(--secondary);
+}
+
+/* =========================
+   Footer Text
+========================= */
+
+.text-muted{
+    font-size:14px;
+}
+
+/* =========================
+   Mobile
+========================= */
+
+@media(max-width:768px){
+
+    .hero-section{
+        padding:40px 20px;
+    }
+
+    .main-card{
+        margin-top:-20px;
+    }
+
+    .card-body{
+        padding:25px !important;
+    }
+
+    .timeline{
+        flex-direction:column;
+        gap:15px;
+    }
+
+    .line{
+        display:none;
+    }
 }

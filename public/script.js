@@ -51,34 +51,38 @@ async function searchTicket() {
             <table class="table table-bordered mb-0">
 
                 <tr>
-                    <th width="35%">Ticket Number</th>
-                    <td>${data.displayId || data.ticketNo}</td>
-                </tr>
+    <th width="35%">Ticket Number</th>
+    <td>${data.ticketNo || "-"}</td>
+</tr>
 
-                <tr>
-                    <th>Current Status</th>
-                    <td>
-                        <span class="badge status-badge">
-                            ${data.status}
-                        </span>
-                    </td>
-                </tr>
+<tr>
+    <th>Current Status</th>
+    <td>
+        <span class="badge status-badge">
+            ${data.status || "-"}
+        </span>
+    </td>
+</tr>
 
-                <tr>
-                    <th>Priority</th>
-                    <td>${data.priority || "-"}</td>
-                </tr>
+<tr>
+    <th>Priority</th>
+    <td>${data.priority || "-"}</td>
+</tr>
 
-                <tr>
-                    <th>Created Date</th>
-                    <td>${data.date || "-"}</td>
-                </tr>
+<tr>
+    <th>Created Date</th>
+    <td>${data.createdDate || "-"}</td>
+</tr>
 
-                <tr>
-                    <th>Last Updated</th>
-                    <td>${data.date || "-"}</td>
-                </tr>
+<tr>
+    <th>Requester Name</th>
+    <td>${data.requesterName || "-"}</td>
+</tr>
 
+<tr>
+    <th>Requester Email</th>
+    <td>${data.requesterEmail || "-"}</td>
+</tr>
             </table>
 
         </div>
