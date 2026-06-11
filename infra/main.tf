@@ -218,7 +218,6 @@ locals {
 # ec2
 resource "aws_instance" "infra_setup" {
   for_each = local.instances
-  count = 2
   ami = var.ami
   instance_type = var.instance_type
   vpc_security_group_ids = [ aws_security_group.eks-sg.id ]
