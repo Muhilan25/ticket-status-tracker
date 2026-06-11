@@ -21,29 +21,31 @@ spec:
     spec:
       containers:
       - name: nodeapp
-        image: nodeapp:v1
-      startupProbe:
-        httpGet:
-          path: /healthz
-          port: 3000
-        failureThreshold: 30
-        periodSeconds: 10
-      livenessProbe:
-        httpGet:
-          path: /healthz
-          port: 3000
-        initialDelaySeconds: 10
-        periodSeconds: 5
-        timeoutSeconds: 3
-        failureThreshold: 3
-      readinessProbe:
-        httpGet:
-          path: /ready
-          port: 3000
-        periodSeconds: 5
-    resources:
-      requests:
-        memory: "256Mi"
-      limits:
-        memory: "512Mi"
-        
+        image: 072583797351.dkr.ecr.ap-south-1.amazonaws.com/nodeapp:v20
+        ports:
+          - containerPort: 3000
+        startupProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          failureThreshold: 30
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 3000
+          periodSeconds: 5
+        resources:
+          requests:
+            memory: "256Mi"
+          limits:
+            memory: "512Mi"
+            
