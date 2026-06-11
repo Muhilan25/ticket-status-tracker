@@ -1,0 +1,8 @@
+availablityzone1 = "ap-south-1a"
+availablityzone2 = "ap-south-1b"
+public-cidr1 = "10.0.1.0/24"
+public-cidr2 = "10.0.2.0/24"
+vpc_cidr = "10.0.0.0/16"
+instance_type = "t3.medium"
+key_name = "helm"
+ami = "ami-07a00cf47dbbc844c"
