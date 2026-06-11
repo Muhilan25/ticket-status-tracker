@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: nodeapp
-        image: 072583797351.dkr.ecr.ap-south-1.amazonaws.com/nodeapp:v32
+        image: 072583797351.dkr.ecr.ap-south-1.amazonaws.com/nodeapp:v33
         ports:
           - containerPort: 3000
         startupProbe:
