@@ -208,16 +208,12 @@ resource "aws_iam_role_policy_attachment" "example-AmazonEC2ContainerRegistryRea
 }
 
 
-locals {
-  instances = {
-    jenkins = aws_subnet.pub_sub1.id
-    sonarqube = aws_subnet.pub_sub2.id
-  }
-}
+
 
 # ec2
 resource "aws_instance" "infra_setup" {
-  for_each = local.instances
+  
+  count = 2
   ami = var.ami
   instance_type = var.instance_type
   vpc_security_group_ids = [ aws_security_group.eks-sg.id ]
@@ -232,7 +228,7 @@ resource "aws_instance" "infra_setup" {
     encrypted = true
   }
    tags = {
-    Name  = each.key
+    Name = ["jenkins", "sonarqube"][count.index]
   }
 }
 
